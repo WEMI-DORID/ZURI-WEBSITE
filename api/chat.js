@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { messages } = req.body;
-  const GEMINI_KEY = process.env.GEMINI_KEY || 'AIzaSyCVkhb9_hC_Q13d9D9xbAscknL3yeu1-js';
+  const GEMINI_KEY = 'AIzaSyCT9s7BHZrBoi9G8tGcvLybh56w67SyDYo';
 
   try {
     const response = await fetch(
@@ -21,14 +21,13 @@ export default async function handler(req, res) {
         })
       }
     );
-
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try { data = JSON.parse(text); } catch(e) { return res.status(500).json({ error: text }); }
     if (data.error) return res.status(400).json({ error: data.error.message });
-
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm not sure about that — book a free call and we'll walk you through everything!";
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Book a free call and we'll walk you through everything!";
     res.status(200).json({ reply });
-
   } catch (err) {
-    res.status(500).json({ error: 'Failed to connect to AI' });
+    res.status(500).json({ error: err.message });
   }
 }
