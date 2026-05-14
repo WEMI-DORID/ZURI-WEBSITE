@@ -7,24 +7,15 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { messages } = req.body;
+  const KEY = process.env.OPENROUTER_KEY;
 
-  const systemPrompt = `You are Zuri, a friendly and professional AI automation agency assistant. You help businesses automate their workflows using AI.
-
-You serve three niches:
-1. E-Commerce Brands - AI chatbots, cart recovery, customer support automation, order tracking, review requests. Setup: $2,500 + $750/month
-2. Local Service Businesses (salons, clinics, gyms, restaurants) - booking automation, SMS reminders, no-show recovery, Google reviews. Setup: $3,000 + $900/month
-3. Real Estate Agents - lead follow-up, viewing scheduler, drip campaigns, CRM integration. Setup: $4,500 + $1,200/month
-
-Other services: AI Content System ($800 setup + $500/month), Lead Generation ($1,500 setup + $700/month).
-You go live in 14-21 days. Free discovery call available.
-
-Keep replies short (2-3 sentences max), warm, and always end by asking what type of business they run or inviting them to book a free call.`;
+  const systemPrompt = `You are Zuri, a friendly AI automation agency assistant. You help businesses automate with AI. You serve 3 niches: 1) E-Commerce Brands (chatbots, cart recovery - $2,500 setup + $750/month), 2) Local Service Businesses like salons, clinics, gyms (booking automation, SMS reminders - $3,000 setup + $900/month), 3) Real Estate Agents (lead follow-up, viewing scheduler - $4,500 setup + $1,200/month). Other services: AI Content System ($800 + $500/month), Lead Generation ($1,500 + $700/month). Go live in 14-21 days. Free discovery call available. Keep replies short (2-3 sentences), warm, always end by asking what business they run or inviting them to book a free call.`;
 
   try {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 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',
+        'Authorization': `Bearer ${KEY}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'https://zuri-website-two.vercel.app',
         'X-Title': 'Zuri AI Agency'
