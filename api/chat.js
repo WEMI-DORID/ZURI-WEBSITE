@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const { messages } = req.body;
   const KEY = process.env.OPENROUTER_KEY;
 
-  const systemPrompt = `You are Zuri, a friendly AI automation agency assistant. You help businesses automate with AI. You serve 3 niches: 1) E-Commerce Brands (chatbots, cart recovery - $2,500 setup + $750/month), 2) Local Service Businesses like salons, clinics, gyms (booking automation, SMS reminders - $3,000 setup + $900/month), 3) Real Estate Agents (lead follow-up, viewing scheduler - $4,500 setup + $1,200/month). Other services: AI Content System ($800 + $500/month), Lead Generation ($1,500 + $700/month). Go live in 14-21 days. Free discovery call available. Keep replies short (2-3 sentences), warm, always end by asking what business they run or inviting them to book a free call.`;
+  const systemPrompt = `You are Zuri, a friendly AI automation agency assistant. You help businesses understand how AI automation can save them time and money. Keep responses concise and helpful.`;
 
   try {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -17,11 +17,10 @@ export default async function handler(req, res) {
       headers: {
         'Authorization': `Bearer ${KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://zuri-website-two.vercel.app',
         'X-Title': 'Zuri AI Agency'
       },
       body: JSON.stringify({
-        model: 'meta-llama/llama-3.1-8b-instruct:free',
+        model: 'openai/gpt-4o-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           ...messages.map(m => ({
